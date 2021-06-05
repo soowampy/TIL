@@ -1,0 +1,171 @@
+### **1. index.html 응답하기**
+
+| 힌트        | 요구사항                                                     |
+| ----------- | ------------------------------------------------------------ |
+| HTTP Header | GET /index.html HTTP/1.1<br />Connection : keep-alive<br />Accept : */* |
+| 1단계       | - InputStream을 한 줄 단위로 읽기 위해 BufferedReader를 생성한다.<br />   ** 구글에서 *java inputstream bufferedreader*로 검색 후 문제 해결<br />- BufferedReader.readLine() 메소드를 활용해 라인별로 HTTP 요청 정보를 읽는다.<br />- HTTP 요청 정보 전체를 출력한다.<br />   ** 헤더 마지막은 while (!"".equals(line)) {} 로 확인 가능<br />   ** line이 null값인 경우에 대한 예외 처리도 해야 함. 그렇지 않을 경우 무한 루프에 빠짐 (if (line == null)) {return;} |
+| 2단계       | - HTTP 요청 정보의 첫 번째 라인에서 요청 URL(위 예의 경우 /index.html)을 추출<br />  ** String[] tokens = line.split(" "); 를 활용해 문자열을 분리할 수 있음<br />- 구현은 별도의 유틸 클래스를 만들고 단위 테스트를 만들어 진행하면 편함 |
+| 3단계       | - 요청 URL에 해당하는 파일을 webapp 디렉토리에서 읽어 전달하면 됨<br />- 구글에서 "java files readallbytes"로 검색해 파일 데이터를 byte[] 로 읽음<br />byte[] body = Files.readAllBytes(new File("./webapp" + url).toPath()); |
+
+**webserver/RequestHandler **
+
+```java
+    public void run() {
+        log.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(),
+                connection.getPort());
+
+        // InputStream : 클라이언트(웹 브라우저)에서 서버로 요청을 보낼 때 전달되는 데이터를 담당하는 스트림
+        // OutputStream : 서버에서 클라이언트에 응답을 보낼 때 전달되는 데이터를 담당하는 스트림
+        try (InputStream in = connection.getInputStream();
+             OutputStream out = connection.getOutputStream()) {
+            // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
+            /**
+             * 2021 - 06 - 04
+             * 96p 요구사항 1 - index.html 응답하기
+             * http://localhost:8080/index.html로 접속했을 때
+             * webapp 디렉토리의 index.html 파일을 읽어 클라이언트에 응답한다.
+             * */
+
+            // InputStream을 한 줄 단위로 읽기 위해 BufferedReader를 생성한다
+            BufferedReader br = new BufferedReader(new InputStreamReader(in));
+
+            // BufferedReader.readLine() 메소드를 활용해 라인별로 HTTP 요청 정보를 읽는다.
+            String line = br.readLine();
+
+            // HTTP 요청 정보의 첫 번째 라인에서 요청 URL을 추출한다.
+            String url = getUrl(line);
+
+            // line이 null 값인 경우에 대한 예외 처리도 해야한다.
+            // 그렇지 않을 경우 무한 루프에 빠진당
+            if (line == null) {
+                return;
+            }
+
+            // HTTP 요청 정보 전체를 출력한다.
+            while(!"".equals(line)) {
+                log.info(line);
+                line = br.readLine();
+            };
+
+            // 요청 URL에 해당하는 파일을 webapp 디렉토리에서 읽어 전달하면 된다
+            DataOutputStream dos = new DataOutputStream(out);
+            byte[] body = Files.readAllBytes(new File("./webapp" + url).toPath());
+            response200Header(dos, body.length);
+            responseBody(dos, body);
+
+
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
+    }
+
+    private String getUrl(String line) {
+        String url = line.split(" ")[1];
+        return url;
+    }
+```
+
+
+
+>### 요약정리
+>
+>1. **포트번호를 받아옴**
+>
+>2. **서버 소켓 생성**
+>
+>  ```java
+>  try (ServerSocket listenSocket = new ServerSocket(port)) {}
+>  ```
+>
+>3. **클라이언트가 대기될 때 까지 대기**
+>
+>  ```java
+>  Socket connection;
+>  while ((connection = listenSocket.accept()) != null) {}
+>  ```
+>
+>4. **ServerSokect에 사용자 요청이 발생하는 순간 클라이언트와 연결을 담당하는 Socket을 RequestHandler에 전달하면서 새로운 스레드를 실행하는 방식으로 멀티 스레드 프로그래밍을 지원**  
+>
+>  ```java
+>  while ((connection = listenSocket.accept()) != null) {
+>      RequestHandler requestHandler = new RequestHandler(connection);
+>      requestHandler.start();
+>  }
+>  ```
+>
+>5. **`RequestHandler` 는 Thread를 상속받은 클래스. ⬆에서 start() 메소드가 실행됐으니 RequestHandler 클래스의 `run() 메소드`가 실행된다.** [스레드 정리내용](https://github.com/suwampy/TIL/blob/main/java/Thread.md)
+>
+>6. **RequestHandler 클래스에서는 메인 메소드에서 생성된 socket 객체를 생성자에 주입받는다**
+>
+>  ```java
+>  public RequestHandler(Socket connectionSocket) {
+>      this.connection = connectionSocket;
+>  }
+>  ```
+>
+>7. **run 메소드에서는 `InputStream`과 `OutputStream`이 생성된다.**
+>
+>  - InputStream : 클라이언트(웹 브라우저)에서 서버로 `요청`을 보낼 때 전달되는 데이터를 담당하는 스트림
+>  - OutputStream :서버에서 클라이언트에 `응답`을 보낼 때 전달되는 데이터를 담당하는 스트림
+>
+>  ```JAVA
+>  try (InputStream in = connection.getInputStream();
+>       OutputStream out = connection.getOutputStream()) {}
+>  ```
+>
+>8. **첫 번째 요구사항 - index.html 응답하기**
+>
+>  8.1   InputStream을 한 줄 단위로 읽기 위해 BufferedReader를 생성한다.
+>
+>  ```java
+>  BufferedReader br = new BufferedReader(new InputStreamReader(in));
+>  ```
+>
+>  8.2 BufferedReader.readLine() 메소드를 활용해 라인별로 HTTP 요청 정보를 읽는다.
+>
+>  ```java
+>  String line = br.readLine();
+>  ```
+>
+>  8.3 HTTP 요청 정보의 첫 번째 라인에서 요청 URL을 추출한다.
+>
+>  ```java
+>  String url = getUrl(line);
+>
+>  private String get Url(String line) {
+>      String line = line.split("")[1];
+>      return url;
+>  }
+>  ```
+>
+>  8.4 line이 null 값인 경우에 대한 예외 처리도 해야한다.그렇지 않을경우 무한루프에빠짐
+>
+>  ```java
+>  if (line == null){
+>      return;
+>  }
+>  ```
+>
+>  8.5 HTTP 요청 정보 전체를 출력한다.
+>
+>  ```java
+>  while(!"". equals(line)){
+>      log.info("HTTP request info : {}:", line);
+>      line = br.readLine();
+>  }
+>  ```
+>
+>  ***log에  http request 정보가 찍힌당....***
+>
+>  ![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fbc7dJH%2Fbtq6zQSlBZF%2F7VN8D6nvrfRq7omA4xeCB1%2Fimg.png)
+>
+>  8.6 요청 URL에 해당하는 파일을 webapp 디렉토리에서 읽어 전달
+>
+>  ```java
+>  DataOutputStream dos = new DataOutputStream(out);
+>  byte[] body = Files.readAllBytes(new File("./webapp" + url).toPath());
+>  response200Header(dos, body.length);
+>  responseBody(dos, body);
+>  ```
+>
+>  [실습 코드](https://github.com/suwampy/web-application-server/blob/master/src/main/java/webserver/WebServer.java)
