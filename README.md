@@ -20,7 +20,7 @@ Today I Leanred
 | 2021/06/01 | [Web Next Step - 개발환경 구축](https://github.com/suwampy/TIL/blob/main/web-next-step/3-1.%20%EA%B0%9C%EB%B0%9C%20%ED%99%98%EA%B2%BD%20%EA%B5%AC%EC%B6%95.md) |                                      |
 | 2021/06/04 | [Web Next Step - 요구사항 실습](https://github.com/suwampy/TIL/blob/main/web-next-step/3-2%20.%20%EC%9A%94%EA%B5%AC%EC%82%AC%ED%95%AD%20%EC%8B%A4%EC%8A%B5.md) | 요구사항 1- index.html 응답하기 까지 |
 | 2021/06/05 | [Web Next Step - 요구사항 실습](https://github.com/suwampy/TIL/blob/main/web-next-step/3-2%20.%20%EC%9A%94%EA%B5%AC%EC%82%AC%ED%95%AD%20%EC%8B%A4%EC%8A%B5.md) |요구사항 4 - 302 status code 적용까지  |
-| 2021/07/16 | [운영체제 개요](https://github.com/suwampy/TIL/blob/main/os/1.%20%EC%9A%B4%EC%98%81%EC%B2%B4%EC%A0%9C%20%EA%B0%9C%EC%9A%94.md) |요구사항 4 - 302 status code 적용까지  |
+| 2021/07/16 | [운영체제 개요](https://github.com/suwampy/TIL/blob/main/os/1.%20%EC%9A%B4%EC%98%81%EC%B2%B4%EC%A0%9C%20%EA%B0%9C%EC%9A%94.md) ||
 
 
 
