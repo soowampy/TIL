@@ -1,11 +1,8 @@
 # TIL
 
-Today I Leanred
+👉Today I Leanred
 
-| back-end                                                     | front-end                 | computer-science |
-| ------------------------------------------------------------ | ------------------------- | ---------------- |
-| [Docker](#Docker)<br />[Java](#Java)<br />[Web-next-step](#Web-next-step) | [JavaScript](#JavaScript) | [Http](#Http)<br  />[Data-Structure](#Data-Structure)<br  />[Operating-System](#Operating-System)|
-
+목표는. . . 꾸준히 s2
 
 
 | Date       | Sub                                                          | 비고                                 |
@@ -21,11 +18,11 @@ Today I Leanred
 | 2021/06/04 | [Web Next Step - 요구사항 실습](https://github.com/suwampy/TIL/blob/main/web-next-step/3-2%20.%20%EC%9A%94%EA%B5%AC%EC%82%AC%ED%95%AD%20%EC%8B%A4%EC%8A%B5.md) | 요구사항 1- index.html 응답하기 까지 |
 | 2021/06/05 | [Web Next Step - 요구사항 실습](https://github.com/suwampy/TIL/blob/main/web-next-step/3-2%20.%20%EC%9A%94%EA%B5%AC%EC%82%AC%ED%95%AD%20%EC%8B%A4%EC%8A%B5.md) |요구사항 4 - 302 status code 적용까지  |
 | 2021/07/16 | [운영체제 개요](https://github.com/suwampy/TIL/blob/main/os/1.%20%EC%9A%B4%EC%98%81%EC%B2%B4%EC%A0%9C%20%EA%B0%9C%EC%9A%94.md) ||
+| 2021/08/19 | 세미프로젝트 진행 - 내꼬니꼬|@PostConstruct, Gradle빌드, VO, DAO, DTO, Entity Class의 차이,Service Interface 사용 여부|
+| 2021/08/20 | 세미프로젝트 진행 - 내꼬니꼬|REST API 관점에서 바라보는 HTTP 상태 코드, 프로젝트 코드 리뷰|
 
 
-
-
-
+@todo링크걸기귀찮다 언젠간하자...
 
 ## Docker
 
