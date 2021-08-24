@@ -21,6 +21,7 @@
 | 2021/08/19 | 세미프로젝트 진행 - 내꼬니꼬|@PostConstruct, Gradle빌드, VO, DAO, DTO, Entity Class의 차이,Service Interface 사용 여부|
 | 2021/08/20 | 세미프로젝트 진행 - 내꼬니꼬|REST API 관점에서 바라보는 HTTP 상태 코드, 프로젝트 코드 리뷰|
 | 2021/08/22 | JPA|JPA의 내부동작 방식|
+| 2021/08/24 | Java - 정적 팩토리 메소드||
 
 
 @todo링크걸기귀찮다 언젠간하자...
