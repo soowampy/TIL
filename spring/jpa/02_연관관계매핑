@@ -1,0 +1,167 @@
+## 연관관계 매핑
+
+방향 : 단방향, 양방향
+
+- 단방향 : 회원➡팀 또는 팀➡회원 둘 중 한쪽만 참조
+- 양방향 : 회원➡팀, 팀➡회원 양쪽 모두 참조
+
+다중성 : 다대일, 일대다, 일대일, 다대다
+
+연간관계의 주인 : 객체 양방향 연관관계는 관리 필요
+
+
+
+### 연관관계가 필요한 이유
+
+-> 객체지향적 코드 작성
+
+
+
+### 단방향 연관관계
+
+- 회원과 팀이 있다
+- 회원은 하나의 팀에만 소속될 수 있다.
+- 회원과 팀은 다대일 관계다.
+
+**회원에서 팀으로 접근하는 다대일 단방향 매핑**
+
+```java
+@Entity
+public class Member {
+    @Id
+    @Column(name="MEMBER_ID")
+    private String id;
+    
+    // 연관관계 매핑
+    @ManyToOne
+    @JoinColumn(name="TEAM_ID")
+    private Team team;
+}
+
+@Entity
+public class Team {
+    @Id
+    @Column(name="TEAM_ID")
+    private String id;
+    
+    private String name;
+}
+```
+
+
+
+### 양방향 연관관계
+
+- 회원 ➡ 팀 (Member.team)
+- 팀 ➡ 회원 (Team.members)
+
+**회원에서 팀으로 접근하고 반대방향인 팀에서도 회원으로 접근할 수 있는 양방향 매핑**
+
+```java
+@Entity
+public class Member {
+    @Id
+    @Column(name="MEMBER_ID")
+    private String id;
+    
+    // 연관관계 매핑
+    @ManyToOne
+    @JoinColumn(name="TEAM_ID")
+    private Team team;
+}
+
+@Entity
+public class Team {
+    @Id
+    @Column(name="TEAM_ID")
+    private String id;
+    
+    private String name;
+    
+    // 추가
+    @OneToMany(mappedBy= "team")
+    private List<Member> members = new ArrayList<Member>();
+}
+```
+
+
+
+
+
+### 양방향 연관관계와 연관관계의 주인
+
+Member(id, **Team team**, username) *
+Team(id, name, **List members**) 0..1
+
+- 양방향 매핑 규칙
+
+  - 객체의 두 관계중 하나를 연관관계의 주인으로 지정
+  - 연관관계의 주인만이 외래 키를 관리(등록, 수정)
+  - 주인이 아닌쪽은 읽기만 가능
+  - **주인은 mappedBy 속성 사용 X**
+  - 주인이 아니면 mappedBy 속성으로 주인 지정
+
+- 누구를 주인으로?
+
+  - **외래키가 있는 곳을 주인으로**
+
+  - Member.team()
+
+    
+
+### 양방향 매핑시 가장 많이 하는 실수
+
+  👉연관관계의 주인에 값을 입력하지 않음
+
+```java
+Team team = new Team();
+team.setName("TeamA");
+em.persist(team);
+
+Member member = new Member();
+member.setName("member1");
+
+// 역방향 (주인이 아닌 방향)만 연관관계 설정
+team.getMembers().add(member);
+
+em.persist(member);
+```
+
+**실행결과**
+
+| ID   | USERNAME | TEAM_ID  |
+| ---- | -------- | -------- |
+| 1    | member1  | **null** |
+
+**순수 객체 관계를 고려**해서 항상 **양쪽에 값을 설정**해야 함
+
+```java
+Team team = new Team();
+team.setName("TeamA");
+em.persist(team);
+
+Member member = new Member();
+member.setName("member1");
+
+team.getMembers().add(member);
+member.setTeam(team);
+
+em.persist(member);
+```
+
+연관관계 편의 메소드를 생성
+
+```java
+public void setTeam(Team team) {
+    this.team = team;
+    team.getMembers().add(this);
+}
+```
+
+**주의점**
+
+ 🙏 controller에서 entity를 반환하지말자!! (dto 반환)
+
+ 🙏 애초에 **단방향 매핑**으로 설계 해야함ㅋㅋㅠㅠ
+
+ 
