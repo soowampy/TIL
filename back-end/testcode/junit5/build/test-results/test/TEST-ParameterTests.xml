@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="ParameterTests" tests="3" skipped="0" failures="0" errors="0" timestamp="2022-10-08T09:45:49" hostname="yusuwan-ui-MacBookPro.local" time="0.048">
+  <properties/>
+  <testcase name="[1] racecar" classname="ParameterTests" time="0.039"/>
+  <testcase name="[2] radar" classname="ParameterTests" time="0.001"/>
+  <testcase name="[3] able was I ere I saw elba" classname="ParameterTests" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
