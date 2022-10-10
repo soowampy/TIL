@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="junit.service.MemberServiceTests" tests="1" skipped="0" failures="0" errors="0" timestamp="2022-10-10T18:03:38" hostname="SUWAN" time="1.159">
+  <properties/>
+  <testcase name="멤버_생성_메서드가_1번_호출됐는지_확인()" classname="junit.service.MemberServiceTests" time="1.159"/>
+  <system-out><![CDATA[성공
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
